@@ -4,7 +4,7 @@ byte lightPin=startPin;
 
 void setup() {
     for(byte pin=startPin;pin<=endPin;pin++){
-        pinMode(pi,OUTPUT);
+        pinMode(pin,OUTPUT);
         digitalWrite(pin,LOW);
     }
 }
