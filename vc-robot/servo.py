@@ -49,6 +49,15 @@ class Servo:
             self.write(angle)
             await asyncio.sleep(delay)
             self.log(angle)
+            @staticmethod
+    
+    def vlerp(motors, angle_steps, delay):
+        tasks = []
+        for motor, steps in zip(motors, angle_steps):
+            tasks.append(motor.lerp(*steps, delay))
+        for task in tasks:
+            task.result()  # Wait for each task to complete
+
 
     @staticmethod
     async def valerp(motors, angle_steps, delay):
