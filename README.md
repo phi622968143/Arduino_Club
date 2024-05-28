@@ -11,6 +11,7 @@ This repository contains code for a voice controlled robot, it is highly experim
 ## Usage
 
 servo - lerp for one sg-90 control  / vlerp for mutiple sg-90
+
 remote - pico w & android whisper app data transform
 
 ## Examples
