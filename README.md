@@ -16,6 +16,8 @@ remote - pico w & android whisper app data transform
 
 ## Circuit
 <img width="481" alt="截圖 2024-05-29 晚上8 35 38" src="https://github.com/phi622968143/Arduino_Club/assets/40814498/84580d50-df1d-48cc-b646-913734259911">
+
+
 ## Contributing
 
 ## License
