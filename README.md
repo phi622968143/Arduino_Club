@@ -19,7 +19,7 @@ remote - pico w & android whisper app data transform
 
 ## Max7219 MicroPython ref
 https://github.com/mcauser/micropython-max7219
-##DfPlayer pico 
+## DfPlayer pico 
 https://github.com/mannbro/PicoDFPlayer
 ## Contributing
 
