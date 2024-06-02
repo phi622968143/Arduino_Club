@@ -1,8 +1,8 @@
 #include <LedControl.h> 
 
-int DIN = 12;
-int CS =  11;
-int CLK = 10;
+int DIN = 12;//miso
+int CS =  11;//mosi
+int CLK = 10;//ss
 
 
 
