@@ -1,6 +1,7 @@
 import socket
 import network
-from action import action_test
+from servo.action import action_test
+from mp3.DFplayer import DFPlayer
 
 # WiFi configuration
 def read_wifi_config(filename):
@@ -29,11 +30,11 @@ print("WiFi connected:", wifi.ifconfig()[0])
 # Define actions for each byte value
 
 def action_0(byte):
-    from servo import Servo
-    rt=Servo(0)
-    rt.lerp(-19, 180, 1 , 0.01)
+    action_test()
 def action_1(byte):
-    print("Action 1 for byte:", byte)
+    player = DFPlayer(uart_port=1, baud_rate=9600, rx_pin=5, tx_pin=4)
+    player.set_volume(12)
+    player.play_track(1)
 
 def action_2(byte):
     print("Action 2 for byte:", byte)
