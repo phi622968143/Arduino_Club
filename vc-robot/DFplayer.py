@@ -22,3 +22,8 @@ class DFPlayer:
 
     def resume(self):
         self.send_command(0x0D, 0)
+    def next_track(self):
+        self.send_command(0x01, 0)
+
+    def previous_track(self):
+        self.send_command(0x02, 0)
