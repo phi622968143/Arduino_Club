@@ -19,8 +19,11 @@ remote - pico w & android whisper app data transform
 ## Code
 
 remote-voiced controlling cmd of servo,mp3 
+
 servo-lerp for single control , vlerp muti
+
 mp3 - DFplayer using UART protocol
+
 LED- control 2 max7219 8*8 Matrix LEDs by using arduino UNO 
 
 ## Contributing
