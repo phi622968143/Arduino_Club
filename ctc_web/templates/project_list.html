@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projects</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .project-section, .create-project-section {
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        .project-section h2, .create-project-section h2 {
+            margin-top: 0;
+        }
+        .project-section label, .create-project-section label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+        }
+        .project-section input[type="text"],
+        .project-section textarea,
+        .project-section input[type="date"],
+        .create-project-section input[type="text"],
+        .create-project-section textarea,
+        .create-project-section input[type="date"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .project-section button, .create-project-section button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .project-section button:hover, .create-project-section button:hover {
+            background-color: #45a049;
+        }
+        .project-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .project-item {
+            border: 1px solid #ccc;
+            padding: 10px;
+            border-radius: 5px;
+            position: relative;
+        }
+        .action-buttons {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
+        .action-buttons a {
+            margin-left: 10px;
+            color: #333;
+            text-decoration: none;
+            font-size: 1.2em;
+        }
+        .action-buttons a:hover {
+            color: #4CAF50;
+        }
+    </style>
+</head>
+<body>
+    <h1>Projects</h1>
+    
+    <!-- Create Project Section -->
+    <div class="create-project-section">
+        <h2>Create Project</h2>
+        <form method="post">
+            {% csrf_token %}
+            <label for="title">Title:</label>
+            <input type="text" id="title" name="title" required>
+            
+            <label for="description">Description:</label>
+            <textarea id="description" name="description" rows="5" required></textarea>
+            
+            <label for="start_date">Start Date:</label>
+            <input type="date" id="start_date" name="start_date" required>
+            
+            <label for="end_date">End Date:</label>
+            <input type="date" id="end_date" name="end_date" required>
+            
+            <label for="staff">Staff:</label>
+            {% comment %} <select id="staff" name="staff" required>
+                {% for staff in Staff.objects.all %}
+                <option value="{{ staff.id }}">{{ staff.name }}</option>
+                {% endfor %}
+            </select> {% endcomment %}
+            <input type="text" id="staff" name="staff" required>
+            
+            <button type="submit">Create Project</button>
+        </form>
+    </div>
+    
+    <!-- Project List -->
+    <div class="project-list">
+        {% for project in projects %}
+        <div class="project-item">
+            <h3>{{ project.title }}</h3>
+            <p>{{ project.description }}</p>
+            <p>Start Date: {{ project.start_date }}</p>
+            <p>End Date: {{ project.end_date }}</p>
+            <p>Staff: {{ project.staff.name }}</p>
+            <a href="{% url 'post_list' project.id %}">View Posts</a>
+            <div class="action-buttons">
+                <a href="{% url 'update_project' project.id %}" title="Update">
+                    <i class="fas fa-edit"></i>
+                </a>
+                <a href="{% url 'delete_project' project.id %}" title="Delete">
+                    <i class="fas fa-trash-alt"></i>
+                </a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</body>
+</html>

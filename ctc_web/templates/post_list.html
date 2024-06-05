@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload and Display Post</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .upload-section, .display-section {
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        .upload-section h2, .display-section h2 {
+            margin-top: 0;
+        }
+        .upload-section label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+        }
+        .upload-section input[type="text"],
+        .upload-section textarea,
+        .upload-section input[type="file"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .upload-section .custom-file-upload {
+            display: inline-block;
+            cursor: pointer;
+            padding: 10px 15px;
+            background-color: #4CAF50;
+            color: white;
+            border-radius: 5px;
+            border: none;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        .upload-section .custom-file-upload i {
+            margin-right: 5px;
+        }
+        .upload-section button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .upload-section button:hover {
+            background-color: #45a049;
+        }
+        .posts {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .post {
+            border: 1px solid #ccc;
+            padding: 10px;
+            width: calc(50% - 20px);
+            box-sizing: border-box;
+            border-radius: 5px;
+        }
+        .post img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Upload and Display Post for Project: {{ project.title }}</h1>
+
+    <!-- Upload section -->
+    <div class="upload-section">
+        <h2>Upload Post</h2>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <label for="title">Title:</label>
+            <input type="text" id="title" name="title" required>
+            
+            <label for="content">Content:</label>
+            <textarea id="content" name="content" rows="10" required></textarea>
+            
+            <label for="image">Image:</label>
+            <label class="custom-file-upload">
+                <i class="fas fa-cloud-upload-alt"></i> Upload Image
+                <input type="file" id="image" name="image">
+            </label>
+            
+            <button type="submit">Save</button>
+        </form>
+    </div>
+
+    <!-- Display section -->
+    <div class="display-section">
+        <h2>Posts</h2>
+        <div class="posts" id="preview">
+            {% for post in posts %}
+                <div class="post">
+                    <h3>Title: {{ post.title }}</h3>
+                    <p>{{ post.content }}</p>
+                    {% if post.image %}
+                        <img src="{{ post.image.url }}" alt="Image" style="max-width: 100px; height: auto;">
+                    {% endif %}
+                    <p>Project ID: {{ post.project.id }}</p>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+</html>
