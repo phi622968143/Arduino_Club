@@ -19,10 +19,13 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from workspace.urls import urlpatterns as workspaceURL
-
-
+from leisure.urls import urlpatterns as leisureURL
+from public.urls import urlpatterns as publicURL
 urlpatterns = [
+     path('', include(publicURL)), 
     path('admin/', admin.site.urls),
     path('workspace/', include(workspaceURL)),
+    path('leisure/', include(leisureURL)),
+    
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

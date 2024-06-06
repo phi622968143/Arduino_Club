@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>入口頁面</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f4f4f4;
+        }
+
+        .container {
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .buttons {
+            margin-bottom: 3rem;
+        }
+
+        .buttons a {
+            text-decoration: none;
+            color: #fff;
+            background-color: #333;
+            padding: 1rem 2rem;
+            margin: 0 1rem;
+            border-radius: 5px;
+            font-size: 1.2rem;
+        }
+
+        .buttons a:hover {
+            background-color: #555;
+        }
+
+        .media-display {
+            display: flex;
+            justify-content: space-around;
+            width: 80%;
+            height: 40vh;
+            background-color: #ddd;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .media-display img {
+            width: 45%;
+            height: auto;
+            object-fit: cover;
+            margin: 5px;
+        }
+    </style>
+    {% load static %}
+</head>
+<body>
+    <div class="container">
+        <h1>歡迎來到創意科技社</h1>
+        <div class="buttons">
+            <a href="/workspace/project">工作區</a>
+            <a href="/leisure/">休閒區</a>
+        </div>
+        <div class="media-display">
+            <img src="{% static 'images/club_robot.jpg' %}" alt="Media Display">
+            <img src="{% static 'images/club_act.jpg' %}" alt="Media Display">
+        </div>
+    </div>
+</body>
+</html>
