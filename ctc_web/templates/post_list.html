@@ -3,121 +3,108 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Upload and Display Post</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <title>文章列表</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            margin: 20px;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
         }
-        .upload-section, .display-section {
-            background-color: #f9f9f9;
+
+        .container {
+            max-width: 800px;
+            margin: auto;
             padding: 20px;
-            border-radius: 10px;
+            background-color: #fff;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .post {
             margin-bottom: 20px;
         }
-        .upload-section h2, .display-section h2 {
+
+        .post h3 {
             margin-top: 0;
         }
-        .upload-section label {
-            font-weight: bold;
-            display: block;
-            margin-bottom: 5px;
-        }
-        .upload-section input[type="text"],
-        .upload-section textarea,
-        .upload-section input[type="file"] {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-        .upload-section .custom-file-upload {
-            display: inline-block;
-            cursor: pointer;
-            padding: 10px 15px;
-            background-color: #4CAF50;
-            color: white;
-            border-radius: 5px;
-            border: none;
-            text-align: center;
-            margin-bottom: 10px;
-        }
-        .upload-section .custom-file-upload i {
-            margin-right: 5px;
-        }
-        .upload-section button {
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-        }
-        .upload-section button:hover {
-            background-color: #45a049;
-        }
-        .posts {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
-        }
-        .post {
-            border: 1px solid #ccc;
-            padding: 10px;
-            width: calc(50% - 20px);
-            box-sizing: border-box;
-            border-radius: 5px;
-        }
+
         .post img {
             max-width: 100%;
             height: auto;
+            display: block;
+            margin: 10px 0;
+        }
+
+        .post .edit-link, .post .delete-link {
+            text-decoration: none;
+            color: #fff;
+            background-color: #333;
+            padding: 5px 10px;
             border-radius: 5px;
+            margin-right: 10px;
+        }
+
+        .post .edit-link:hover, .post .delete-link:hover {
+            background-color: #555;
+        }
+
+        .add-post-form {
+            margin-top: 20px;
+        }
+
+        .add-post-form input, .add-post-form textarea, .add-post-form button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .add-post-form button {
+            background-color: #333;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
+
+        .add-post-form button:hover {
+            background-color: #555;
         }
     </style>
 </head>
 <body>
-    <h1>Upload and Display Post for Project: {{ project.title }}</h1>
+    <div class="container">
+        <h1>{{ project.title }} - 文章列表</h1>
+        
+        {% for post in posts %}
+            <div class="post">
+                <h3>{{ post.title }}</h3>
+                <p>{{ post.content }}</p>
+                {% if post.image %}
+                    <img src="{{ post.image.url }}" alt="Post image">
+                {% endif %}
+                <p>作者: {{ post.author.username }} 发帖时间: {{ post.created_at }}</p>
+                {% if post.author == request.user or project.staff.user == request.user %}
+                    <a href="{% url 'update_post' post.id %}" class="edit-link">编辑文章</a>
+                    <form action="{% url 'delete_post' post.id %}" method="post" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="delete-link">删除文章</button>
+                    </form>
+                {% endif %}
+            </div>
+        {% endfor %}
 
-    <!-- Upload section -->
-    <div class="upload-section">
-        <h2>Upload Post</h2>
-        <form method="post" enctype="multipart/form-data">
-            {% csrf_token %}
-            <label for="title">Title:</label>
-            <input type="text" id="title" name="title" required>
-            
-            <label for="content">Content:</label>
-            <textarea id="content" name="content" rows="10" required></textarea>
-            
-            <label for="image">Image:</label>
-            <label class="custom-file-upload">
-                <i class="fas fa-cloud-upload-alt"></i> Upload Image
-                <input type="file" id="image" name="image">
-            </label>
-            
-            <button type="submit">Save</button>
-        </form>
-    </div>
-
-    <!-- Display section -->
-    <div class="display-section">
-        <h2>Posts</h2>
-        <div class="posts" id="preview">
-            {% for post in posts %}
-                <div class="post">
-                    <h3>Title: {{ post.title }}</h3>
-                    <p>{{ post.content }}</p>
-                    {% if post.image %}
-                        <img src="{{ post.image.url }}" alt="Image" style="max-width: 100px; height: auto;">
-                    {% endif %}
-                    <p>Project ID: {{ post.project.id }}</p>
-                </div>
-            {% endfor %}
-        </div>
+        {% if project.staff.user == request.user %}
+            <h2>添加新文章</h2>
+            <form method="post" class="add-post-form" enctype="multipart/form-data">
+                {% csrf_token %}
+                <input type="text" name="title" placeholder="文章标题" required>
+                <textarea name="content" placeholder="文章内容" required></textarea>
+                <input type="file" name="image">
+                <button type="submit">发布文章</button>
+            </form>
+        {% endif %}
     </div>
 </body>
 </html>

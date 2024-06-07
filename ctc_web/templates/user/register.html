@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>注册</title>
+</head>
+<body>
+    <h2>注册</h2>
+    <form method="post">
+        {% csrf_token %}
+        <p>
+            <label for="username">用户名:</label>
+            <input type="text" name="username" required>
+        </p>
+        <p>
+            <label for="password">密码:</label>
+            <input type="password" name="password" required>
+        </p>
+        <p>
+            <label for="confirm_password">确认密码:</label>
+            <input type="password" name="confirm_password" required>
+        </p>
+        <button type="submit">注册</button>
+    </form>
+    <p>已经有账号了？<a href="{% url 'login' %}">登录</a></p>
+</body>
+</html>

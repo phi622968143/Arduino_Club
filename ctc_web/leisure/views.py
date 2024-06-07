@@ -1,12 +1,13 @@
 from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.db import models
-from .models import Member, Post, Comment, Reaction, Vote, Poll, Option
+from .models import Member, Post, Comment, Reaction, Poll, Option
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
-from itertools import chain
-from operator import attrgetter
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 
+@login_required
 def post_list(request):
     posts = Post.objects.all()
     polls = Poll.objects.order_by('-created_at')[:5]  # 获取最新的五个投票
@@ -20,11 +21,11 @@ def post_list(request):
 
 @csrf_exempt
 @require_POST
+@login_required
 def post_action(request):
     action_type = request.POST.get('action_type')
 
     if action_type == 'create_post':
-       
         content = request.POST['content']
         image = request.FILES.get('image')
         author = Member.objects.get(id=request.user.id)  # 假设用户已登录
@@ -65,7 +66,11 @@ def post_action(request):
     elif action_type == 'delete_post':
         post_id = request.POST['post_id']
         post = get_object_or_404(Post, id=post_id)
-        post.delete()
+        if request.user == post.author:
+            post.delete()
+            messages.success(request, '文章已删除')
+        else:
+            messages.error(request, '您没有权限删除这篇文章')
 
     elif action_type == 'delete_poll':
         poll_id = request.POST['poll_id']

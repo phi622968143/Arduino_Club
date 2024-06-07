@@ -21,11 +21,13 @@ from django.conf.urls.static import static
 from workspace.urls import urlpatterns as workspaceURL
 from leisure.urls import urlpatterns as leisureURL
 from public.urls import urlpatterns as publicURL
+from user.urls import urlpatterns as userURL
 urlpatterns = [
-     path('', include(publicURL)), 
+    path('', include(publicURL)), 
     path('admin/', admin.site.urls),
     path('workspace/', include(workspaceURL)),
     path('leisure/', include(leisureURL)),
+    path('user/', include(userURL))
     
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
