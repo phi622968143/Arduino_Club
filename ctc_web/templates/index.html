@@ -70,10 +70,18 @@
             <a href="/workspace/project">工作區</a>
             <a href="/leisure/">休閒區</a>
         </div>
-        <div class="buttons">
-            <a href="{% url 'login' %}">登入</a>
-            <a href="{% url 'register' %}">註冊</a>
-        </div>
+        {% if user.is_authenticated %}
+            <!-- 用戶已登錄，顯示退出按鈕 -->
+            <div class="buttons">
+                <a href="{% url 'logout' %}">登出</a>
+            </div>
+        {% else %}
+            <!-- 用戶未登錄，顯示登入和註冊按鈕 -->
+            <div class="buttons">
+                <a href="{% url 'login' %}">登入</a>
+                <a href="{% url 'register' %}">註冊</a>
+            </div>
+        {% endif %}
         <div class="media-display">
             <img src="{% static 'images/club_robot.jpg' %}" alt="Media Display">
             <img src="{% static 'images/club_act.jpg' %}" alt="Media Display">

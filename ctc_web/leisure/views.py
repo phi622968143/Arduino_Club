@@ -1,7 +1,9 @@
 from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.db import models
-from .models import Member, Post, Comment, Reaction, Poll, Option
+from .models import  Post, Comment, Reaction, Poll, Option
+from user.models import User
+
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 from django.contrib.auth.decorators import login_required
@@ -28,21 +30,21 @@ def post_action(request):
     if action_type == 'create_post':
         content = request.POST['content']
         image = request.FILES.get('image')
-        author = Member.objects.get(id=request.user.id)  # 假设用户已登录
+        author = User.objects.get(id=request.user.id)  # 假设用户已登录
         Post.objects.create(content=content, author=author, image=image)
 
     elif action_type == 'add_comment':
         post_id = request.POST['post_id']
         post = get_object_or_404(Post, id=post_id)
         content = request.POST['content']
-        author = Member.objects.get(id=request.user.id)
+        author = User.objects.get(id=request.user.id)
         Comment.objects.create(post=post, author=author, content=content)
 
     elif action_type == 'add_reaction':
         post_id = request.POST['post_id']
         post = get_object_or_404(Post, id=post_id)
         emoji = request.POST['emoji']
-        reactor = Member.objects.get(id=request.user.id)
+        reactor = User.objects.get(id=request.user.id)
         Reaction.objects.create(post=post, reactor=reactor, emoji=emoji)
         reaction_count = post.reactions.filter(emoji=emoji).count()
         return JsonResponse({'success': True, 'emoji': emoji, 'count': reaction_count})
@@ -60,7 +62,7 @@ def post_action(request):
         poll = get_object_or_404(Poll, id=poll_id)
         option_id = request.POST['option_id']
         option = get_object_or_404(Option, id=option_id)
-        voter = Member.objects.get(id=request.user.id)
+        voter = User.objects.get(id=request.user.id)
         option.votes.add(voter)
 
     elif action_type == 'delete_post':

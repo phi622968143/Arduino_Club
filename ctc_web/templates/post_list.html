@@ -1,110 +1,44 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>文章列表</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            margin: 0;
-            padding: 0;
-        }
+{% extends "base.html" %}
 
-        .container {
-            max-width: 800px;
-            margin: auto;
-            padding: 20px;
-            background-color: #fff;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
+{% block title %}文章列表{% endblock %}
 
-        .post {
-            margin-bottom: 20px;
-        }
+{% block content %}
+    <h2>{{ project.title }} - 文章列表</h2>
 
-        .post h3 {
-            margin-top: 0;
-        }
+    {% for post in posts %}
+        <div class="post">
+            <h3>{{ post.title }}</h3>
+            <p>{{ post.content }}</p>
+            {% if post.image %}
+                <img src="{{ post.image.url }}" alt="Post image">
+            {% endif %}
+            <p>作者: {{ post.author.username }} 发帖时间: {{ post.created_at }}</p>
+            {% if post.author == request.user or request.user == project.manager %}
+                {% comment %} <a href="{% url 'update_post' post.id %}" class="button">编辑文章</a> {% endcomment %}
+                <form action="{% url 'delete_post' post.id %}" method="post" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="button">删除文章</button>
+                </form>
+            {% endif %}
+        </div>
+    {% empty %}
+        <p>没有找到任何文章。</p>
+    {% endfor %}
 
-        .post img {
-            max-width: 100%;
-            height: auto;
-            display: block;
-            margin: 10px 0;
-        }
-
-        .post .edit-link, .post .delete-link {
-            text-decoration: none;
-            color: #fff;
-            background-color: #333;
-            padding: 5px 10px;
-            border-radius: 5px;
-            margin-right: 10px;
-        }
-
-        .post .edit-link:hover, .post .delete-link:hover {
-            background-color: #555;
-        }
-
-        .add-post-form {
-            margin-top: 20px;
-        }
-
-        .add-post-form input, .add-post-form textarea, .add-post-form button {
-            display: block;
-            width: 100%;
-            padding: 10px;
-            margin: 10px 0;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-        }
-
-        .add-post-form button {
-            background-color: #333;
-            color: #fff;
-            border: none;
-            cursor: pointer;
-        }
-
-        .add-post-form button:hover {
-            background-color: #555;
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <h1>{{ project.title }} - 文章列表</h1>
-        
-        {% for post in posts %}
-            <div class="post">
-                <h3>{{ post.title }}</h3>
-                <p>{{ post.content }}</p>
-                {% if post.image %}
-                    <img src="{{ post.image.url }}" alt="Post image">
-                {% endif %}
-                <p>作者: {{ post.author.username }} 发帖时间: {{ post.created_at }}</p>
-                {% if post.author == request.user or project.staff.user == request.user %}
-                    <a href="{% url 'update_post' post.id %}" class="edit-link">编辑文章</a>
-                    <form action="{% url 'delete_post' post.id %}" method="post" style="display:inline;">
-                        {% csrf_token %}
-                        <button type="submit" class="delete-link">删除文章</button>
-                    </form>
-                {% endif %}
-            </div>
-        {% endfor %}
-
-        {% if project.staff.user == request.user %}
+    {% if project.manager == request.user %}
+        <div class="form-container">
             <h2>添加新文章</h2>
-            <form method="post" class="add-post-form" enctype="multipart/form-data">
+            <form method="post" enctype="multipart/form-data">
                 {% csrf_token %}
+                <input type="hidden" name="action_type" value="create_post">
                 <input type="text" name="title" placeholder="文章标题" required>
                 <textarea name="content" placeholder="文章内容" required></textarea>
                 <input type="file" name="image">
                 <button type="submit">发布文章</button>
             </form>
-        {% endif %}
-    </div>
-</body>
-</html>
+        </div>
+    {% endif %}
+
+    <a href="{% url 'project_list' %}" class="button">返回项目列表</a>
+    <a href="{% url 'index' %}" class="button">回到首页</a>
+{% endblock %}

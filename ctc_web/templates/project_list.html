@@ -1,116 +1,40 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>项目列表</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            margin: 0;
-            padding: 0;
-        }
+{% extends "base.html" %}
 
-        .container {
-            max-width: 800px;
-            margin: auto;
-            padding: 20px;
-            background-color: #fff;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
+{% block title %}项目列表{% endblock %}
 
-        .project {
-            margin-bottom: 20px;
-        }
+{% block content %}
+    <h2>项目列表</h2>
 
-        .project h3 {
-            margin-top: 0;
-        }
+    {% for project in projects %}
+        <div class="post">
+            <h3>{{ project.title }}</h3>
+            <p>{{ project.description }}</p>
+            <p>负责人: {{ project.manager.username }}</p>
+            <p>开始日期: {{ project.start_date }}</p>
+            <p>截止日期: {{ project.end_date }}</p>
+            <a href="{% url 'post_list' project.id %}" class="button">查看文章</a>
+            {% comment %} <a href="{% url 'update_project' project.id %}" class="button">更新项目</a> {% endcomment %}
+            <form method="post" action="{% url 'delete_project' project.id %}" style="display:inline;">
+                {% csrf_token %}
+                <button type="submit" class="button" onclick="return confirm('确定要删除这个项目吗？');">删除项目</button>
+            </form>
+        </div>
+    {% empty %}
+        <p>没有找到任何项目。</p>
+    {% endfor %}
 
-        .project p {
-            margin: 5px 0;
-        }
-
-        .project .edit-link, .project .delete-link {
-            text-decoration: none;
-            color: #fff;
-            background-color: #333;
-            padding: 5px 10px;
-            border-radius: 5px;
-            margin-right: 10px;
-        }
-
-        .project .edit-link:hover, .project .delete-link:hover {
-            background-color: #555;
-        }
-
-        .add-project-form {
-            margin-top: 20px;
-        }
-
-        .add-project-form input, .add-project-form select, .add-project-form textarea {
-            display: block;
-            width: 100%;
-            padding: 10px;
-            margin: 10px 0;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-        }
-
-        .add-project-form button {
-            padding: 10px;
-            background-color: #333;
-            color: #fff;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-
-        .add-project-form button:hover {
-            background-color: #555;
-        }
-    </style>
-    {% load static %}
-</head>
-<body>
-    <div class="container">
-        <h1>项目列表</h1>
-        {% for project in projects %}
-            <div class="project">
-                <h3>{{ project.title }}</h3>
-                <p>{{ project.description }}</p>
-                <p>开始日期: {{ project.start_date }}</p>
-                <p>结束日期: {{ project.end_date }}</p>
-                <a href="{% url 'post_list' project.id %}" class="edit-link">查看文章</a>
-                {% if project.staff.user == request.user %}
-                    <a href="{% url 'update_project' project.id %}" class="edit-link">编辑项目</a>
-                    <form action="{% url 'delete_project' project.id %}" method="post" style="display:inline;">
-                        {% csrf_token %}
-                        <button type="submit" class="delete-link">删除项目</button>
-                    </form>
-                {% endif %}
-            </div>
-        {% endfor %}
-
-        <h2>添加新项目</h2>
-        <form method="post" class="add-project-form" id="addProjectForm">
+    <div class="form-container">
+        <h2>创建新项目</h2>
+        <form method="post">
             {% csrf_token %}
+            <input type="hidden" name="action_type" value="create_project">
             <input type="text" name="title" placeholder="项目标题" required>
             <textarea name="description" placeholder="项目描述" required></textarea>
-            <input type="date" name="start_date" placeholder="开始日期" required>
-            <input type="date" name="end_date" placeholder="结束日期" required>
-            <input type="hidden" name="staff" id="staffId">
-            <button type="submit">添加项目</button>
+            <input type="date" name="start_date" value="{{ current_date }}" required>
+            <input type="date" name="end_date" min="{{ current_date }}" placeholder="项目截止日期" required>
+            <button type="submit" class="button">创建项目</button>
         </form>
     </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // 自动填充当前用户的 ID
-            const staffIdField = document.getElementById('staffId');
-            staffIdField.value = "{{ request.user.staff.id }}";
-        });
-    </script>
-</body>
-</html>
+    <a href="{% url 'index' %}" class="button">回到首页</a>
+{% endblock %}

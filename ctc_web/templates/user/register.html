@@ -4,25 +4,89 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>注册</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f4f4f4;
+        }
+
+        .container {
+            max-width: 400px;
+            width: 100%;
+            padding: 2rem;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        h2 {
+            margin-bottom: 1rem;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            margin-top: 1rem;
+            text-align: left;
+        }
+
+        input, select {
+            padding: 0.5rem;
+            margin-top: 0.5rem;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        button {
+            margin-top: 1rem;
+            padding: 0.75rem;
+            background-color: #333;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #555;
+        }
+
+        .link {
+            margin-top: 1rem;
+            display: block;
+        }
+    </style>
 </head>
 <body>
-    <h2>注册</h2>
-    <form method="post">
-        {% csrf_token %}
-        <p>
+    <div class="container">
+        <h2>注册</h2>
+        <form method="post">
+            {% csrf_token %}
             <label for="username">用户名:</label>
             <input type="text" name="username" required>
-        </p>
-        <p>
             <label for="password">密码:</label>
             <input type="password" name="password" required>
-        </p>
-        <p>
             <label for="confirm_password">确认密码:</label>
             <input type="password" name="confirm_password" required>
-        </p>
-        <button type="submit">注册</button>
-    </form>
-    <p>已经有账号了？<a href="{% url 'login' %}">登录</a></p>
+            <label for="user_type">身份类型:</label>
+            <select name="user_type" id="user_type" required>
+                <option value="" disabled selected>选择您的身份</option>
+                <option value="member">普通会员</option>
+                <option value="staff">干部</option>
+            </select>
+            <button type="submit">注册</button>
+        </form>
+        <p class="link">已经有账号了？<a href="{% url 'login' %}">登录</a></p>
+    </div>
 </body>
 </html>
