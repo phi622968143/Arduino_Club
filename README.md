@@ -33,7 +33,8 @@ A club introducing robot with Led eyes which can dance and speak with android wh
 ### 2024.09.04 Aaron 1. Connect Pico W : Press BOOTSEL button, insert USB, put-off BOOTSEL after insert USB
 
 ### 2024.09.04 Aaron 2. Pull .uf2 file into Pico W, it'll reloading automatically
-![Uploading image.png…]()
+![image](https://github.com/user-attachments/assets/580ed21f-4091-4887-b5e6-5dc7f88acf41)
+
 
 ## License
 
