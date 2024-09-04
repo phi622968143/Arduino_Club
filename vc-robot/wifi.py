@@ -6,7 +6,7 @@ SSID = ''
 PASSWORD = ''
 
 # 初始化 WLAN (Wi-Fi)
-wlan = network.WLAN(network.STA_IF)
+wlan = network.WLAN(network.AP_IF)
 wlan.active(True)  # 啟用 Wi-Fi 模組
 
 # 連接到指定的 Wi-Fi 網絡
