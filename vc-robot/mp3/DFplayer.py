@@ -5,7 +5,7 @@ class DFPlayer:
     def __init__(self, uart_port, baud_rate, rx_pin, tx_pin):
         self.uart = UART(uart_port, baud_rate, rx=rx_pin, tx=tx_pin)
         self.uart.init(baud_rate, bits=8, parity=None, stop=1)
-        time.sleep(1)  # 等待初始化完成
+        time.sleep(1)  
 
     def send_command(self, command, param):
         data = bytearray([0x7E, 0xFF, 0x06, command, 0x00, (param >> 8) & 0xFF, param & 0xFF, 0xEF])
