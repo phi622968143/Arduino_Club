@@ -22,7 +22,10 @@ A club introducing robot with Led eyes which can dance and speak with android wh
 ### LED- control 2 max7219 8*8 Matrix LEDs by using arduino UNO 
 
 ## Contributing
-
+24.9.1-phi622968143
+  draw circuit pic , 
+  android phone hot spot connect pico w socket(socket(HOST,PORT)) , port set in r_s.py
+  DFPlayer setting outside action functions.(Also init)
 ## License
 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
