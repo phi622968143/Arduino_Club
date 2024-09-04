@@ -23,9 +23,16 @@ A club introducing robot with Led eyes which can dance and speak with android wh
 
 ## Contributing
 ### 24.9.1-phi622968143
+
   draw circuit pic , 
+  
   android phone hot spot connect pico w socket(socket(HOST,PORT)) , port set in r_s.py
+  
   DFPlayer setting outside action functions.(Also init)
+  
+### 2024.09.04 Aaron 1. Connect Pico W : Press BOOTSEL button, insert USB, put-off BOOTSEL after insert USB
+
+### 2024.09.04 Aaron 2. Pull .uf2 file into Pico W, it'll reloading automatically
 ## License
 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
