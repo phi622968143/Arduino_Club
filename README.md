@@ -9,6 +9,7 @@ A club introducing robot with Led eyes which can dance and speak with android wh
 ## Installation
 
 ## Circuit
+pico w pinout   https://randomnerdtutorials.com/raspberry-pi-pico-w-pinout-gpios/#pwm-pins
 <img width="481" alt="截圖 2024-05-29 晚上8 35 38" src="https://github.com/phi622968143/Arduino_Club/assets/40814498/84580d50-df1d-48cc-b646-913734259911">
 
 ## Code
