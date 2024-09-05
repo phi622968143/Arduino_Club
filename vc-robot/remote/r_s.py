@@ -1,6 +1,6 @@
 import socket
 import network
-from servo.action import action_test
+from servo.action import servo_default_action,forward_action
 from mp3.DFplayer import DFPlayer
 
 # WiFi configuration
@@ -30,7 +30,7 @@ print("WiFi connected:", wifi.ifconfig()[0])
 # Define actions for each byte value
 
 def action_0(byte):
-    action_test()
+    forward_action()
 def action_1(byte):
     player = DFPlayer(uart_port=1, baud_rate=9600, rx_pin=5, tx_pin=4)
     player.set_volume(12)
@@ -41,7 +41,9 @@ def action_2(byte):
 
 def default_action(byte):
     print("Default action for byte:", byte)
-
+def timeout_action():
+    print("Timeout occurred, performing default action.")
+    servo_default_action()
 # Mapping byte values to corresponding actions
 action_map = {
     0: action_0,
@@ -64,12 +66,19 @@ server_socket.listen(1)
 
 print('Waiting for a connection...')
 
+def reset_timer():
+    global timeout_timer
+    if timeout_timer is not None:
+        timeout_timer.cancel()
+    timeout_timer = threading.Timer(60.0, timeout_action)
+    timeout_timer.start()
+    
 try:
     while True:
         # Accept a connection
         client_socket, client_address = server_socket.accept()
         print('Connected to:', client_address)
-        
+        reset_timer()
         try:
             while True:
                 # Receive binary data
