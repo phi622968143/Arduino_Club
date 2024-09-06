@@ -36,7 +36,23 @@ pico w pinout   https://randomnerdtutorials.com/raspberry-pi-pico-w-pinout-gpios
 ### 2024.09.04 Aaron 2. Pull .uf2 file into Pico W, it'll reloading automatically
 ![image](https://github.com/user-attachments/assets/580ed21f-4091-4887-b5e6-5dc7f88acf41)
 
+### 24.9.5
+  Tasks:
+	motion
 
+	*    default : waiting(5 min forward and backword)
+	**   spec  :      (lift legs,turn right)
+	***  dance :    play music and dance
+	
+Do:
+	5* (rb(0,90),rb(90,0)),5*(lb)
+Q:
+	wireless motor
+	voiced receive
+	club intro(also dance)
+	combine(voice,eyes,leg)
+	
+	slide ,l:60-150,r:0-90, r is better
 ## License
 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
