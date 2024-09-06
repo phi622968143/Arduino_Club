@@ -45,14 +45,21 @@ pico w pinout   https://randomnerdtutorials.com/raspberry-pi-pico-w-pinout-gpios
 	***  dance :    play music and dance
 	
 Do:
-	5* (rb(0,90),rb(90,0)),5*(lb)
+
+ 	5* (rb(0,90),rb(90,0)),5*(lb)
+
 Q:
-	wireless motor
-	voiced receive
-	club intro(also dance)
-	combine(voice,eyes,leg)
+	
+ 	wireless motor
+	
+ 	voiced receive
+	
+ 	club intro(also dance)
+	
+ 	combine(voice,eyes,leg)
 	
 	slide ,l:60-150,r:0-90, r is better
+ 
 ## License
 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
