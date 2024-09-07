@@ -2,7 +2,7 @@ import socket
 import network
 from servo.action import servo_default_action,forward_action
 from mp3.DFplayer import DFPlayer
-
+from LED.testLed import *
 # WiFi configuration
 def read_wifi_config(filename):
     wifi_config = {}
@@ -26,6 +26,7 @@ while not wifi.isconnected():
     pass
 
 print("WiFi connected:", wifi.ifconfig()[0])
+test_patterns()
 
 # Define actions for each byte value
 
@@ -37,7 +38,9 @@ def action_1(byte):
     player.play_track(1)
 
 def action_2(byte):
-    print("Action 2 for byte:", byte)
+    for i in range(20)
+        love_patterns()
+        time.sleep(0.7)
 
 def default_action(byte):
     print("Default action for byte:", byte)
