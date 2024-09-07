@@ -1,8 +1,11 @@
 import socket
 import network
-from servo.action import servo_default_action,forward_action
+import time
+import threading  
+from servo.action import servo_default_action, forward_action
 from mp3.DFplayer import DFPlayer
 from LED.testLed import *
+
 # WiFi configuration
 def read_wifi_config(filename):
     wifi_config = {}
@@ -29,24 +32,26 @@ print("WiFi connected:", wifi.ifconfig()[0])
 test_patterns()
 
 # Define actions for each byte value
-
 def action_0(byte):
     forward_action()
+
 def action_1(byte):
     player = DFPlayer(uart_port=1, baud_rate=9600, rx_pin=5, tx_pin=4)
     player.set_volume(12)
     player.play_track(1)
 
 def action_2(byte):
-    for i in range(20)
+    for i in range(20):  
         love_patterns()
         time.sleep(0.7)
 
 def default_action(byte):
     print("Default action for byte:", byte)
+
 def timeout_action():
     print("Timeout occurred, performing default action.")
     servo_default_action()
+
 # Mapping byte values to corresponding actions
 action_map = {
     0: action_0,
@@ -56,7 +61,7 @@ action_map = {
 
 # Configure the server
 HOST = '0.0.0.0'  # Listen on all available interfaces
-PORT = 2024      # Arbitrary port number
+PORT = 2024       # Arbitrary port number
 
 # Create a TCP/IP socket
 server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -69,13 +74,15 @@ server_socket.listen(1)
 
 print('Waiting for a connection...')
 
+timeout_timer = None  # 修正：初始化 timeout_timer
+
 def reset_timer():
     global timeout_timer
     if timeout_timer is not None:
         timeout_timer.cancel()
     timeout_timer = threading.Timer(60.0, timeout_action)
     timeout_timer.start()
-    
+
 try:
     while True:
         # Accept a connection
@@ -107,4 +114,3 @@ finally:
     # Close the server socket
     print('Closing server socket...')
     server_socket.close()
-
