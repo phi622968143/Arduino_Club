@@ -42,7 +42,7 @@ def love_patterns():
         display2.brightness(8)
         display_pattern(display1, pattern)
         display_pattern(display2, pattern)
-        time.sleep(0.7)
+        time.sleep(0.5)
 while True:
     test_patterns()
     time.sleep(0.5)
