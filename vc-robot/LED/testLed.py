@@ -35,7 +35,14 @@ def test_patterns():
         display_pattern(display1, pattern)
         display_pattern(display2, pattern)
         time.sleep(0.7)
-
+def love_patterns():
+    patterns = [love_1,circle]
+    for pattern in patterns:
+        display1.brightness(8)
+        display2.brightness(8)
+        display_pattern(display1, pattern)
+        display_pattern(display2, pattern)
+        time.sleep(0.7)
 while True:
     test_patterns()
     time.sleep(0.5)
