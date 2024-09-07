@@ -1,7 +1,6 @@
 import socket
 import network
 import time
-import threading  
 from servo.action import servo_default_action, forward_action
 from mp3.DFplayer import DFPlayer
 from LED.testLed import *
@@ -74,21 +73,13 @@ server_socket.listen(1)
 
 print('Waiting for a connection...')
 
-timeout_timer = None  # 修正：初始化 timeout_timer
-
-def reset_timer():
-    global timeout_timer
-    if timeout_timer is not None:
-        timeout_timer.cancel()
-    timeout_timer = threading.Timer(60.0, timeout_action)
-    timeout_timer.start()
 
 try:
     while True:
         # Accept a connection
         client_socket, client_address = server_socket.accept()
         print('Connected to:', client_address)
-        reset_timer()
+
         try:
             while True:
                 # Receive binary data
