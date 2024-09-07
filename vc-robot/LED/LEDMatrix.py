@@ -1,51 +1,55 @@
-from machine import SPI, Pin
+from machine import Pin, SPI
+import framebuf
+from micropython import const
 
-class LEDMatrix:
-    def __init__(self, cs_pin, sck_pin, mosi_pin, num_cols=8, num_rows=8, baudrate=100000):
-        self.spi = SPI(1, baudrate=baudrate, sck=Pin(sck_pin), mosi=Pin(mosi_pin))
-        self.cs_pin = Pin(cs_pin, Pin.OUT)
-        self.cs_pin.value(1)  # Chip select high initially
-        self.num_cols = num_cols
-        self.num_rows = num_rows
-        self.init_matrix()
+_NOOP = const(0)
+_DIGIT0 = const(1)
+_DECODEMODE = const(9)
+_INTENSITY = const(10)
+_SCANLIMIT = const(11)
+_SHUTDOWN = const(12)
+_DISPLAYTEST = const(15)
 
-    def init_matrix(self):
-        # Initialize MAX7219 registers
-        self.cs_pin.value(0)  # Chip select low
-        self.spi.write(bytes([0x09, 0x00]))  # Decode mode: no decode
-        self.spi.write(bytes([0x0A, 0x06]))  # Intensity: medium intensity
-        self.spi.write(bytes([0x0B, 0x07]))  # Scan limit: all rows
-        self.spi.write(bytes([0x0C, 0x01]))  # Shutdown: normal operation
-        self.spi.write(bytes([0x0F, 0x00]))  # Display test: off
-        self.cs_pin.value(1)  # Chip select high
-        print("Matrix initialized")
+class Matrix8x8:
+    def __init__(self, spi, cs, num):
+        self.spi = spi
+        self.cs = cs
+        self.cs.init(Pin.OUT, True)
+        self.buffer = bytearray(8 * num)
+        self.num = num
+        fb = framebuf.FrameBuffer(self.buffer, 8 * num, 8, framebuf.MONO_HLSB)
+        self.framebuf = fb
+        self.fill = fb.fill
+        self.pixel = fb.pixel
+        self.text = fb.text
+        self.show = self._show
+        self.init()
 
-    def set_led(self, row, col, state):
-        # Set LED at specified row and column to given state (0 or 1)
-        if row < 0 or row >= self.num_rows or col < 0 or col >= self.num_cols:
-            return
-        self.cs_pin.value(0)  # Chip select low
-        address = col + 1  # Address for MAX7219
-        data = 1 << row if state else 0
-        self.spi.write(bytes([address, data]))
-        self.cs_pin.value(1)  # Chip select high
-        print(f"Set LED at row {row}, col {col} to state {state}")
+    def _write(self, command, data):
+        self.cs(0)
+        for _ in range(self.num):
+            self.spi.write(bytearray([command, data]))
+        self.cs(1)
 
-    def clear(self):
-        # Clear all LEDs
-        for col in range(self.num_cols):
-            for row in range(self.num_rows):
-                self.set_led(row, col, 0)
-        print("Matrix cleared")
+    def init(self):
+        for command, data in (
+            (_SHUTDOWN, 0),
+            (_DISPLAYTEST, 0),
+            (_SCANLIMIT, 7),
+            (_DECODEMODE, 0),
+            (_SHUTDOWN, 1),
+        ):
+            self._write(command, data)
 
-    def display_pattern(self, pattern):
-        # Display a predefined or custom pattern
-        if len(pattern) != self.num_cols * self.num_rows:
-            print("Pattern length does not match matrix size")
-            return
-        self.clear()
-        for col in range(self.num_cols):
-            for row in range(self.num_rows):
-                index = col * self.num_cols + row
-                self.set_led(row, col, pattern[index])
-        print("Pattern displayed")
+    def brightness(self, value):
+        if not 0 <= value <= 15:
+            raise ValueError("Brightness out of range")
+        self._write(_INTENSITY, value)
+
+    def _show(self):
+        for y in range(8):
+            self.cs(0)
+            for m in range(self.num):
+                self.spi.write(bytearray([_DIGIT0 + y, self.buffer[(y * self.num) + m]]))
+            self.cs(1)
+    
