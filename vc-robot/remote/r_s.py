@@ -1,9 +1,9 @@
 import socket
 import network
 import time
-from servo.action import servo_default_action, forward_action
-from mp3.DFplayer import DFPlayer
-from LED.testLed import *
+from action import servo_default_action, forward_action
+from DFplayer import DFPlayer
+from testLed import *
 
 # WiFi configuration
 def read_wifi_config(filename):
