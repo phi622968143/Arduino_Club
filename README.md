@@ -22,6 +22,8 @@ https://github.com/mcauser/micropython-max7219
 ## DfPlayer pico 
 https://github.com/mannbro/PicoDFPlayer
 ## Contributing
+## ESP32S BlueTooth
+
 
 ## License
 
