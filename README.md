@@ -23,6 +23,10 @@ https://github.com/mcauser/micropython-max7219
 https://github.com/mannbro/PicoDFPlayer
 ## Contributing
 ## ESP32S BlueTooth
+![螢幕擷取畫面 2024-09-14 174527](https://github.com/user-attachments/assets/645cf6a9-1aef-4f61-8c72-c27f2a39be33)
+Go to [ESP32-A2DP](https://github.com/pschatzmann/ESP32-A2DP) downlaod A2DP library
+Then import .zip into IDE
+(!Warning!)A2DP didn't support ESP32C3, ESP32S2, ESP32S3, suggest use ESP32S
 
 
 ## License
