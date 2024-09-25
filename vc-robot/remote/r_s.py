@@ -60,7 +60,7 @@ action_map = {
 
 # Configure the server
 HOST = '0.0.0.0'  # Listen on all available interfaces
-PORT = 2024       # Arbitrary port number
+PORT = 2000       # Arbitrary port number
 
 # Create a TCP/IP socket
 server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
