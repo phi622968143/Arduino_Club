@@ -1,9 +1,9 @@
 import socket
 import network
 import time
-from action import servo_default_action, forward_action
-from DFplayer import DFPlayer
-from testLed import *
+from testLed import led_patterns
+from mp3play import play
+from action import Action
 
 # WiFi configuration
 def read_wifi_config(filename):
@@ -25,38 +25,29 @@ wifi.active(True)
 wifi.connect(WIFI_SSID, WIFI_PASSWORD)
 
 while not wifi.isconnected():
-    pass
+    print("Waiting for WiFi connection...")
+    time.sleep(1)
 
 print("WiFi connected:", wifi.ifconfig()[0])
-test_patterns()
 
 # Define actions for each byte value
-def action_0(byte):
-    forward_action()
 
+def action_0(byte):
+    
+    action=Action()
+    action.servo_default_action()
 def action_1(byte):
-    player = DFPlayer(uart_port=1, baud_rate=9600, rx_pin=5, tx_pin=4)
-    player.set_volume(12)
-    player.play_track(1)
+    print("Playing music")
+    play.music()
 
 def action_2(byte):
-    for i in range(20):  
-        love_patterns()
-        time.sleep(0.7)
+    matrix=led_patterns()
+    time.sleep(5)
+    for i in range(20):
+        matrix.love_patterns()
 
 def default_action(byte):
     print("Default action for byte:", byte)
-
-def timeout_action():
-    print("Timeout occurred, performing default action.")
-    servo_default_action()
-
-# Mapping byte values to corresponding actions
-action_map = {
-    0: action_0,
-    1: action_1,
-    2: action_2,
-}
 
 # Configure the server
 HOST = '0.0.0.0'  # Listen on all available interfaces
@@ -73,7 +64,6 @@ server_socket.listen(1)
 
 print('Waiting for a connection...')
 
-
 try:
     while True:
         # Accept a connection
@@ -83,19 +73,35 @@ try:
         try:
             while True:
                 # Receive binary data
+                time.sleep(2)
                 data = client_socket.recv(1024)
                 if not data:
-                    break  # No more data, break the loop
+                    print("No data received, closing connection.")
+                    break
                 
+                # Print received data
+                print("Received data:", data)
+
                 for byte in data:
+                    print(f"Processing byte: {byte}")
+                    
                     # Perform action based on byte value
-                    action = action_map.get(byte, default_action)
-                    action(byte)
+                    if byte == 0:
+                        action_0(byte)
+                    elif byte == 10:
+                        action_1(byte)
+                    elif byte == 2:
+                        action_2(byte)
+                    else:
+                        default_action(byte)
                     
                     # Send acknowledgment back to the sender
                     ack = bytes([byte])  # ACK with the received byte
                     client_socket.sendall(ack)
         
+        except Exception as e:
+            print(f"Error during communication: {e}")
+
         finally:
             # Close the client connection
             print('Closing connection with:', client_address)
